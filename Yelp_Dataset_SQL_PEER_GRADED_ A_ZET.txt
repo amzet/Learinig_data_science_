@@ -1,0 +1,516 @@
+Data Scientist Role Play: Profiling and Analyzing the Yelp Dataset Coursera Worksheet
+
+This is a 2-part assignment. In the first part, you are asked a series of questions that will help you profile and understand the data just like a data scientist would. For this first part of the assignment, you will be assessed both on the correctness of your findings, as well as the code you used to arrive at your answer. You will be graded on how easy your code is to read, so remember to use proper formatting and comments where necessary.
+
+In the second part of the assignment, you are asked to come up with your own inferences and analysis of the data for a particular research question you want to answer. You will be required to prepare the dataset for the analysis you choose to do. As with the first part, you will be graded, in part, on how easy your code is to read, so use proper formatting and comments to illustrate and communicate your intent as required.
+
+For both parts of this assignment, use this "worksheet." It provides all the questions you are being asked, and your job will be to transfer your answers and SQL coding where indicated into this worksheet so that your peers can review your work. You should be able to use any Text Editor (Windows Notepad, Apple TextEdit, Notepad ++, Sublime Text, etc.) to copy and paste your answers. If you are going to use Word or some other page layout application, just be careful to make sure your answers and code are lined appropriately.
+In this case, you may want to save as a PDF to ensure your formatting remains intact for you reviewer.
+
+
+
+Part 1: Yelp Dataset Profiling and Understanding
+
+1. Profile the data by finding the total number of records for each of the tables below:
+	
+i. Attribute table = 10000
+ii. Business table = 10000
+iii. Category table = 10000
+iv. Checkin table = 10000
+v. elite_years table = 10000
+vi. friend table = 10000
+vii. hours table = 10000
+viii. photo table = 10000
+ix. review table = 10000
+x. tip table = 10000
+xi. user table = 10000
+	
+
+
+2. Find the total distinct records by either the foreign key or primary key for each table. If two foreign keys are listed in the table, please specify which foreign key.
+
+i.    Business    = 10000 
+ii.   Hours       = 1562
+iii.  Category    = 2643
+iv.   Attribute   = 1115
+v.    Review      = 8090  (business_id VARCHAR) 
+vi.   Checkin     = 493
+vii.  Photo       = 6493  (business_id VARCHAR)
+viii. Tip         = 537   (user_id VARCHAR)
+ix.   User        = 10000
+x.    Friend      = 11
+xi.   Elite_years = 2780
+
+Note: Primary Keys are denoted in the ER-Diagram with a yellow key icon.	
+
+
+
+3. Are there any columns with null values in the Users table? Indicate "yes," or "no."
+
+	Answer: YES
+	
+	
+	SQL code used to arrive at answer:
+	
+SELECT *
+FROM user
+ORDER BY NULL ASC;  -- ALL NULL areas should be returned FIRST
+
+	
+4. For each table and column listed below, display the smallest (minimum), largest (maximum), and average (mean) value for the following fields:
+
+	i. Table: Review, Column: Stars
+	
+		min: 1		max: 5		avg: 3.7082
+		
+	
+	ii. Table: Business, Column: Stars
+	
+		min: 1		max: 5		avg: 3.6549
+		
+	
+	iii. Table: Tip, Column: Likes
+	
+		min: 0		max: 2		avg:  0.0144
+		
+	
+	iv. Table: Checkin, Column: Count
+	
+		min: 1		max: 53		avg: 1.9414
+		
+	
+	v. Table: User, Column: Review_count
+	
+		min: 0		max: 2000	 avg: 24.2995
+		
+
+
+5. List the cities with the most reviews in descending order:
+
+	SQL code used to arrive at answer:
+SELECT city 
+     , count(review_count)
+       AS count_r
+FROM business
+GROUP BY city        -- it will allow to count for individual city 
+ORDER BY count_r DESC;
+	
+	
+	Copy and Paste the Result Below:
+	
++-----------------+---------+
+| city            | count_r |
++-----------------+---------+
+| Las Vegas       |    1561 |
+| Phoenix         |    1001 |
+| Toronto         |     985 |
+| Scottsdale      |     497 |
+| Charlotte       |     468 |
+| Pittsburgh      |     353 |
+| Montréal        |     337 |
+| Mesa            |     304 |
+| Henderson       |     274 |
+| Tempe           |     261 |
+| Edinburgh       |     239 |
+| Chandler        |     232 |
+| Cleveland       |     189 |
+| Gilbert         |     188 |
+| Glendale        |     188 |
+| Madison         |     176 |
+| Mississauga     |     150 |
+| Stuttgart       |     141 |
+| Peoria          |     105 |
+| Markham         |      80 |
+| Champaign       |      71 |
+| North Las Vegas |      70 |
+| North York      |      64 |
+| Surprise        |      60 |
+| Richmond Hill   |      54 |
++-----------------+---------+
+(Output limit exceeded, 25 of 362 total rows shown)
+	
+
+6. Find the distribution of star ratings to the business in the following cities:
+
+i. Avon
+
+
+SQL code used to arrive at answer:
+
+
+SELECT COUNT(stars)
+     , stars AS star_rating
+FROM  business
+GROUP BY   city             -- making sure all stars for given city will be mentioned, helps with visualization 
+         , stars            -- making sure calculation will be fesh out for a particualr star
+HAVING city = 'Avon'
+ORDER BY COUNT(stars) DESC;
+
+
+Copy and Paste the Resulting Table Below (2 columns – star rating and count):
+
++--------------+-------------+
+| COUNT(stars) | star_rating |
++--------------+-------------+
+|            3 |         3.5 |
+|            2 |         2.5 |
+|            2 |         4.0 |
+|            1 |         1.5 |
+|            1 |         4.5 |
+|            1 |         5.0 |
++--------------+-------------+
+
+
+ii. Beachwood
+
+SQL code used to arrive at answer:
+
+
+
+SELECT COUNT(stars)
+     , stars AS star_rating
+FROM  business
+GROUP BY   city
+         , stars
+HAVING city = 'Beachwood'
+ORDER BY COUNT(stars) DESC;
+
+
+
+Copy and Paste the Resulting Table Below (2 columns – star rating and count):
+		
++--------------+-------------+
+| COUNT(stars) | star_rating |
++--------------+-------------+
+|            5 |         5.0 |
+|            2 |         3.0 |
+|            2 |         3.5 |
+|            2 |         4.5 |
+|            1 |         2.0 |
+|            1 |         2.5 |
+|            1 |         4.0 |
++--------------+-------------+
+
+
+7. Find the top 3 users based on their total number of reviews:
+		
+	SQL code used to arrive at answer:
+	
+SELECT  name
+      , review_count
+FROM User
+ORDER BY review_count DESC
+Limit 3; 
+
+	
+	Copy and Paste the Result Below:
+		
++--------+--------------+
+| name   | review_count |
++--------+--------------+
+| Gerald |         2000 |
+| Sara   |         1629 |
+| Yuri   |         1339 |
++--------+--------------+
+
+
+8. Does posing more reviews correlate with more fans?
+
+	Please explain your findings and interpretation of the results:
+
+Base on my calculations posting more reviews is not nessesairy connected with heaving more fans. 
+To calculate that I implied the following code (explanation below):
+
+SELECT review_count
+     , fans
+     , 100.0*fans/review_count  -- precentage of fans number to a review count, to create unified way to compare numbers
+     AS ratio_Fans_to_review
+FROM user
+ORDER BY review_count DESC;     -- checking for users with most reviews
+
+
++--------------+------+----------------------+
+| review_count | fans | ratio_Fans_to_review |
++--------------+------+----------------------+
+|         2000 |  253 |                12.65 |
+|         1629 |   50 |        3.06936771025 |
+|         1339 |   76 |        5.67587752054 |
+|         1246 |  101 |        8.10593900482 |
+|         1215 |  126 |        10.3703703704 |
+|         1153 |  311 |        26.9731136167 |
+|         1116 |   16 |        1.43369175627 |
+|         1039 |  104 |        10.0096246391 |
+|          968 |  497 |        51.3429752066 |
+|          930 |  173 |        18.6021505376 |
+|          904 |   38 |        4.20353982301 |
+|          864 |   43 |        4.97685185185 |
+|          862 |  124 |        14.3851508121 |
+|          861 |  115 |         13.356562137 |
+|          842 |   85 |        10.0950118765 |
+|          836 |   37 |        4.42583732057 |
+|          834 |  120 |        14.3884892086 |
+|          813 |  159 |         19.557195572 |
+|          775 |   61 |        7.87096774194 |
+|          754 |   78 |        10.3448275862 |
+|          702 |   35 |        4.98575498575 |
+|          696 |   10 |         1.4367816092 |
+|          694 |  101 |         14.553314121 |
+|          676 |   25 |        3.69822485207 |
+|          675 |   45 |        6.66666666667 |
++--------------+------+----------------------+
+(Output limit exceeded, 25 of 10000 total rows shown)	
+
+Explanation:
+
+As shown above the ratio of the fans to review count does not grow exponentially.
++----------------------+
+| ratio_Fans_to_review |
++----------------------+
+|                12.65 |
+|        3.06936771025 |
+|        5.67587752054 |
+|        8.10593900482 |
+|        10.3703703704 |
+|        26.9731136167 |
+|        1.43369175627 |
+|        10.0096246391 |
+ 
+That disproves strong connection between posting a lot of reviews and heaving a 
+lot of fans. 
+
+
+
+9. Are there more reviews with the word "love" or with the word "hate" in them?
+
+	Answer: there are more reviews with word 'love' (1780) than 'hate' (232).
+
+	
+	SQL code used to arrive at answer:
+
+SELECT DISTINCT
+
+      ( SELECT COUNT (user_id)
+        FROM review
+        WHERE text LIKE '%love%') 
+      AS LOVE
+
+      , ( SELECT COUNT (user_id)
+          FROM review
+          WHERE text LIKE '%hate%') 
+      AS HATE
+           
+FROM review 	
+	
+10. Find the top 10 users with the most fans:
+
+	SQL code used to arrive at answer:
+
+SELECT name
+     , fans
+FROM user
+ORDER BY fans DESC
+LIMIT 10;	
+	
+	Copy and Paste the Result Below:
+
++-----------+------+
+| name      | fans |
++-----------+------+
+| Amy       |  503 |
+| Mimi      |  497 |
+| Harald    |  311 |
+| Gerald    |  253 |
+| Christine |  173 |
+| Lisa      |  159 |
+| Cat       |  133 |
+| William   |  126 |
+| Fran      |  124 |
+| Lissa     |  120 |
++-----------+------+	
+		
+
+Part 2: Inferences and Analysis
+
+1. Pick one city and category of your choice and group the businesses in that city or category by their overall star rating. Compare the businesses with 2-3 stars to the businesses with 4-5 stars and answer the following questions. Include your code.
+	
+i. Do the two groups you chose to analyze have a different distribution of hours?
+
+No, the two groups do not have a different distribution of hours (Monday|10:00-21:00). 
+
+ii. Do the two groups you chose to analyze have a different number of reviews?
+
+Yes, the two groups have a different number of reviews (2-3 star rating group has 63 reviews. 4-5 rating group has 294 reviews.)
+         
+iii. Are you able to infer anything from the location data provided between these two groups? Explain.
+
+ Yes. The location data provided showed some similarities. Almost all businesses in Pineville with the stars ranging between 2 and 3 (6 of them)
+      are in the same area  which is Carolina Pl Pkwy and Centrum Pkwy.
+      On the other hand, three businesses in Pineville with 4 star rating are also in the Carolina Pl Pkwy. 
+      Base on location data we are able to deduce service sector dominated areas.
+
+SQL code used for analysis:
+
+SELECT  name
+    ,   stars
+    ,   address
+    
+    , ( SELECT h.hours                        -- using the connection between businesses and hours tables to add hourly data 
+        FROM hours h
+        Join hours , business
+        WHERE hours.business_id = business.id)
+    AS Hours
+    , review_count
+    
+    , (SELECT SUM(review_count)            -- calculating the sum of all the reviews with rating between 4 and 5 stars
+      FROM business
+      WHERE city = 'Pineville'
+      GROUP BY stars Between 4 AND 5
+      HAVING stars BETWEEN 4 AND 5)       -- making sure the correct number will be given 
+    AS  SUM_reviews_4_5
+    
+    ,(SELECT SUM(review_count)            -- calculating the sum of all the reviews with rating between 2 and 3 stars
+      FROM business
+      WHERE city = 'Pineville'
+      GROUP BY stars BETWEEN 2 AND 3
+      HAVING stars Between 2 and 3)       -- making sure the correct number will be given 
+    AS  SUM_reviews_2_3                   
+
+FROM business
+WHERE city = 'Pineville'
+       AND ( stars between 4 and 5
+       OR stars between 2 and 3)        -- making sure only the data needed will be shown
+Order by stars desc;	
+		
+2. Group business based on the ones that are open and the ones that are closed. What differences can you find between the ones that are still open and the ones that are closed? List at least two differences and the SQL code you used to arrive at your answer.
+		
+
+i. Difference 1:  total count of the reviews
+
+The first difference is quite prominent between open and closed businesses. 
+Open businesses are heaving way more of total count of the reviews (269300)
+than closed businesses (35261). The difference is larger than 200 000 reviews. 
+
+Which makes sense, because clients will leave review for a place they can actually visit. 
+Also places with less reviews might be linked to place heaving troubles with attracting clients and 
+in effect getting closed.
+
+         
+         
+ii. Difference 2: average of the stars given
+         
+On average open businesses got a slightly better star rating (~ 3.679). 
+In comparison closed businesses had  star rating of ~3.520. 
+The difference between them is quite small and is around ~ 0.159.
+For a comparison that will truly represent the star rating of the closed 
+facilities more people would have to rate them before they got closed. 
+         
+SQL code used for analysis:
+
+SELECT DISTINCT                           -- making sure the table will be neatly showing the data
+
+     (SELECT  SUM(review_count)           -- calculating total count of the reviews for the open businesses
+     FROM business
+     WHERE is_open = 1)             
+     AS OPEN_review_no
+     
+     ,(SELECT AVG(stars)                  -- calculating average of the stars given for open businesses 
+      FROM business
+       WHERE is_open = 1)
+       AS OPEN_AVG_STARS
+   
+    ,(SELECT SUM(review_count)           -- calculating total count of the reviews for the closed businesses
+      FROM business
+      WHERE is_OPEN = 0)
+    AS CLOSED_review_no
+    
+    , (SELECT AVG(stars)                 -- calculating average of the stars given for open businesses 
+      FROM business
+       WHERE is_open = 0)
+       AS CLOSED_AVG_STARS
+
+FROM business
+	
+	
+3. For this last part of your analysis, you are going to choose the type of analysis you want to conduct on the Yelp dataset and are going to prepare the data for analysis.
+
+Ideas for analysis include: Parsing out keywords and business attributes for sentiment analysis, clustering businesses to find commonalities or anomalies between them, predicting the overall star rating for a business, predicting the number of fans a user will have, and so on. These are just a few examples to get you started, so feel free to be creative and come up with your own problem you want to solve. Provide answers, in-line, to all of the following:
+	
+i. Indicate the type of analysis you chose to do:
+
+ANALYSIS: Which types (cathegories) of the open buisnesses are tend to be reviewed the most. What is an average star score for them? 
+How many of the businesses are within one cathegory?         
+         
+ii. Write 1-2 brief paragraphs on the type of data you will need for your analysis and why you chose that data:
+
+
+For that analysis I will need the data from two tables. These tables are business and categories. From business 
+table I will have to extract and calculate average star rating for each category listed in categories. Next I 
+will have to extract review count for each category. From the category table I will have to extract name of 
+the category and calculate how many business has specific category.  
+
+I chose that data because I wanted to understand the distribution of the review giving to a type of business visited
+by the customers. I was also curious about the general star average of those the most reviewed establishments.
+                          
+                  
+iii. Output of your finished dataset:
+ 
++-----------------------+---------------+--------------+-----------+
+| category              |      star_AVG | review_count | CAT_COUNT |
++-----------------------+---------------+--------------+-----------+
+| Asian Fusion          |           3.5 |          768 |         2 |
+| Malaysian             |           4.0 |          768 |         1 |
+| Noodles               |          3.25 |          768 |         2 |
+| Soup                  |          3.75 |          768 |         2 |
+| Taiwanese             |           4.0 |          768 |         1 |
+| Ethnic Food           |           4.0 |          723 |         2 |
+| Farmers Market        |           4.5 |          723 |         1 |
+| Fruits & Veggies      |           4.5 |          723 |         1 |
+| Market Stalls         |           4.5 |          723 |         1 |
+| Meat Shops            |           4.5 |          723 |         1 |
+| Public Markets        |           4.5 |          723 |         1 |
+| Seafood Markets       |           4.5 |          723 |         1 |
+| Specialty Food        |           4.0 |          723 |         5 |
+| Barbeque              |          3.75 |          431 |         2 |
+| Smokehouse            |           4.0 |          431 |         1 |
+| Arabian               |           5.0 |          267 |         1 |
+| Halal                 |           5.0 |          267 |         1 |
+| Salad                 |           4.5 |          267 |         2 |
+| Architects            |           4.5 |          223 |         1 |
+| Architectural Tours   |           4.5 |          223 |         1 |
+| Local Flavor          |           4.0 |          223 |         2 |
+| Museums               |           4.5 |          223 |         1 |
+| Professional Services |          4.25 |          223 |         4 |
+| Tours                 |           4.5 |          223 |         1 |
+| Travel Services       | 4.16666666667 |          223 |         3 |
++-----------------------+---------------+--------------+-----------+
+(Output limit exceeded, 25 of 217 total rows shown)
+
+
+There are 217 categories of open businesses.  
+The most often reviewed businesses are the food establishments leading
+with restaurants. Five first entries having equal numbers of reviews 
+of 768 and are different types of restaurants.
+Average star rating for the 25 most reviewed businesses 
+is 3 - 4.5 stars.     
+Not surprisingly the more general categories heaving the most businesses.
+With simple 'Food' that is given to 76 businesses. They are however not 
+the most reviewed.
+         
+iv. Provide the SQL code you used to create your final dataset:
+
+SELECT  c.category
+      
+      , AVG(b.stars)             -- counting average star rating
+       AS star_AVG
+      
+      , b.review_count
+      
+      , Count(c.category)      -- counting how many businesses have that category
+       AS CAT_COUNT
+       
+FROM category c
+JOIN business b               -- joining needed tables to get all important information
+     ON b.Id = c.Business_id
+GROUP BY category
+HAVING is_open = 1            -- making sure only operating businesses will be included
+ORDER BY review_count DESC;  
